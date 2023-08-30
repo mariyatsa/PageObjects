@@ -9,8 +9,7 @@ import ru.netology.page.LoginPageV2;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.netology.data.DataHelper.generateValidBalance;
-import static ru.netology.data.DataHelper.getAuthInfo;
+import static ru.netology.data.DataHelper.*;
 
 public class MoneyTransferTest {
 
@@ -24,7 +23,6 @@ public class MoneyTransferTest {
     var verificationCode = DataHelper.getVerificationCodeFor();
     dashboardPage = verificationPage.validVerify(verificationCode);
   }
-
   @Test
   void shouldTransferFromFirstCardToSecond() {
     var firstCardInfo = DataHelper.getFirstCartInfo();
