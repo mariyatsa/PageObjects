@@ -47,6 +47,7 @@ public class DataHelper {
   }
 
   public static int generateInvalidBalance(int balance) {// вернет сумму, которая будет больше баланса, на случайное число от 0 до 10 000 тыс
+
     return (Math.abs(balance)) + new Random().nextInt(10000);
   }
 }

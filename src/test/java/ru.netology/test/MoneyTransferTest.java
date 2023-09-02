@@ -13,31 +13,33 @@ import static ru.netology.data.DataHelper.*;
 
 public class MoneyTransferTest {
 
-  DashboardPage dashboardPage;
+    DashboardPage dashboardPage;
 
-  @BeforeEach
-  void setup() {
-    Selenide.open("http://localhost:9999");
-    var authInfo = getAuthInfo();
-    var verificationPage = LoginPageV2.validLogin(authInfo);
-    var verificationCode = DataHelper.getVerificationCodeFor();
-    dashboardPage = verificationPage.validVerify(verificationCode);
-  }
-  @Test
-  void shouldTransferFromFirstCardToSecond() {
-    var firstCardInfo = DataHelper.getFirstCartInfo();
-    var secondCardInfo = DataHelper. getSecondCartInfo();
-    var firstCardBalance = dashboardPage.getCardBalance(firstCardInfo);
-    var secondCardBalance = dashboardPage.getCardBalance(secondCardInfo);
-    var amount = generateValidBalance(firstCardBalance);
-    var expectedBalanceFirstCard = firstCardBalance - amount;
-    var expectedBalanceSecondCard = secondCardBalance + amount;
-    var transferPage = dashboardPage.selectCardToTransfer(secondCardInfo);
-    dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCardInfo);
-    var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
-    var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-    assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
-    assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
-  }
+    @BeforeEach
+    void setup() {
+        Selenide.open("http://localhost:9999");
+        var authInfo = getAuthInfo();
+        var verificationPage = LoginPageV2.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor();
+        dashboardPage = verificationPage.validVerify(verificationCode);
+    }
+
+    @Test
+    void shouldTransferFromFirstCardToSecond() {
+        var firstCardInfo = DataHelper.getFirstCartInfo(); // инфо о первой карте
+        var secondCardInfo = DataHelper.getSecondCartInfo(); // инфо о второй карте
+        var firstCardBalance = dashboardPage.getCardBalance(getFirstCartInfo()); //  поиск баланса по номеру карты, последние 4 цифры
+        var secondCardBalance = dashboardPage.getCardBalance(getSecondCartInfo()); // поиск баланса по номеру карты, последние 4 цифры
+        var amount = generateValidBalance(firstCardBalance); // генерирует валидный баланс
+        var transferPage = dashboardPage.selectCardToTransfer(secondCardInfo); // ищем карту по id, и нажимаем кнопку
+        dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCardInfo); //перевод
+// Сравнение полученных данных
+        var expectedBalanceFirstCard = firstCardBalance - amount; //ожидаемый результат первой карты
+        var expectedBalanceSecondCard = secondCardBalance + amount; // ожидаемы результат второй карты
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
 }
 

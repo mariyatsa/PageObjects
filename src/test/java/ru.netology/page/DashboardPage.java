@@ -10,26 +10,31 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.params.shadow.com.univocity.parsers.conversions.Conversions.trim;
 
 public class DashboardPage {
     private static final String balanceStart = "баланс: ";
-    private static final String balanceFinish = " p.";
+
+    private static final String balanceFinish = " р.";
+
     private final SelenideElement heading = $("[data-test-id=dashboard]");
-    private static final ElementsCollection cards = $$(".list__item div");
+
+    private final ElementsCollection cards = $$(".list__item div");
 
     public DashboardPage() {
         heading.shouldBe(visible);
     }
 
-    public int getCardBalance(DataHelper.CardInfo cardInfo) { // поиск баланса по номеру карты, последние 4 цифры
-        var text = cards.findBy(text(cardInfo.getCardNumber().substring(15))).getText();
-        return extractBalance(text);// берет строку и преобразует ее в число, возвращает значени числа баланса
+    public int getCardBalance(DataHelper.CardInfo cardInfo) {
+        String text;
+        text = cards.findBy(text(cardInfo.getCardNumber().substring(15))).getText();
+        return extractBalance(text);  // поиск баланса по номеру карты, последние 4 цифры
+        // берет строку и преобразует ее в число, возвращает значени числа баланса
     }
 
-    public static int getCardBalance(int index) { // поиск баланса по строкам
-        var text = cards.get(index).getText();
-        return extractBalance(text);
-    }
+    //public static int getCardBalance(int index) { поиск баланса по строкам
+    //var text = cards.get(index).getText();
+    //return extractBalance(text);}
 
     public TransferPage selectCardToTransfer(DataHelper.CardInfo cardInfo) {
         cards.findBy(attribute("data-test-id", cardInfo.getTestId())).$("button").click();
